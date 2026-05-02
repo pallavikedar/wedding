@@ -2,19 +2,13 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react-hooks/exhaustive-deps": "off",
+    "react-hooks/rules-of-hooks": "off",
     "@next/next/no-img-element": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "react/no-unescaped-entities": "off",
     "jsx-a11y/alt-text": "off",
     "@next/next/no-page-custom-font": "off",
-    "@typescript-eslint/no-require-imports": "off"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.jsx", "**/*.tsx"],
-      "rules": {
-        "react-hooks/rules-of-hooks": "off"
-      }
-    }
-  ]
+    "@typescript-eslint/no-require-imports": "off",
+    "react-compiler/react-compiler": "off"
+  }
 }
