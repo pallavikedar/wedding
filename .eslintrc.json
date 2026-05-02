@@ -1,9 +1,1 @@
-{
-  "extends": "next/core-web-vitals",
-  "rules": {
-    "react-hooks/refs": "off",
-    "react-hooks/purity": "off",
-    "react-hooks/set-state-in-effect": "off",
-    "react/no-unescaped-entities": "off"
-  }
-}
+{}
