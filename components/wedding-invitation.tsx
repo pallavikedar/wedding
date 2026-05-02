@@ -130,7 +130,7 @@ export default function WeddingInvitation() {
                 <p className="text-gray-700">
                   Saturday, June 15th, 2024
                   <br />
-                  Four o'clock in the afternoon
+                  Four o&apos;clock in the afternoon
                 </p>
               </div>
 
