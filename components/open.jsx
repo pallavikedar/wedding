@@ -316,7 +316,21 @@ function Open() {
   const [progress, setProgress]                 = useState(0);
   const [scrollY, setScrollY]                   = useState(0);
   const [windowHeight, setWindowHeight]         = useState(0);
-
+const [section3Top, setSection3Top] = useState(0);
+const [venueTopVal, setVenueTopVal] = useState(0);
+useEffect(() => {
+  const update = () => {
+    if (section3Ref.current) setSection3Top(section3Ref.current.offsetTop);
+    if (venueRef.current) setVenueTopVal(venueRef.current.offsetTop);
+  };
+  update();
+  window.addEventListener('resize', update);
+  window.addEventListener('scroll', update, { passive: true });
+  return () => {
+    window.removeEventListener('resize', update);
+    window.removeEventListener('scroll', update);
+  };
+}, []);
   // ── Countdown
   const targetDate = new Date("2026-06-25T00:00:00").getTime();
   const getTimeRemaining = useCallback(() => {
@@ -448,63 +462,63 @@ function Open() {
   });
 
   // ── Section 3 scroll
-  const section3Start    = section3Ref.current?.offsetTop || 0;
-  const section3Progress = Math.max(0, Math.min((scrollY - section3Start) / windowHeight, 1));
-  const getSection3Style = (index) => {
-    if (scrollY < section3Start) return { transform: "translateY(0px)" };
-    if (index === 0) return { transform: `translateY(${-section3Progress * windowHeight}px)`, willChange: "transform" };
-    if (index === 1) return { transform: `translateY(${windowHeight - section3Progress * windowHeight}px)`, willChange: "transform" };
-    return { transform: "translateY(0px)" };
-  };
+ // ── Section 3 scroll
+const section3Start    = section3Top;
+const section3Progress = Math.max(0, Math.min((scrollY - section3Start) / windowHeight, 1));
+const getSection3Style = (index) => {
+  if (scrollY < section3Start) return { transform: "translateY(0px)" };
+  if (index === 0) return { transform: `translateY(${-section3Progress * windowHeight}px)`, willChange: "transform" };
+  if (index === 1) return { transform: `translateY(${windowHeight - section3Progress * windowHeight}px)`, willChange: "transform" };
+  return { transform: "translateY(0px)" };
+};
 
-  // ── Section 4 scroll
-  const scrollClamped = Math.max(0, Math.min(scrollY - windowHeight * 3, windowHeight * 4));
-  const activeIndex   = Math.floor(scrollClamped / windowHeight);
-  const progressVal   = (scrollClamped % windowHeight) / windowHeight;
-  const getStyle = (index) => {
-    if (index === activeIndex)     return { transform: `translateY(${-progressVal * windowHeight}px)`, willChange: "transform" };
-    if (index === activeIndex + 1) return { transform: `translateY(${windowHeight - progressVal * windowHeight}px)`, willChange: "transform" };
-    if (index < activeIndex)       return { transform: `translateY(${-windowHeight}px)` };
-    return { transform: `translateY(${windowHeight}px)` };
-  };
+// ── Section 4 scroll
+const scrollClamped = Math.max(0, Math.min(scrollY - windowHeight * 3, windowHeight * 4));
+const activeIndex   = Math.floor(scrollClamped / windowHeight);
+const progressVal   = (scrollClamped % windowHeight) / windowHeight;
+const getStyle = (index) => {
+  if (index === activeIndex)     return { transform: `translateY(${-progressVal * windowHeight}px)`, willChange: "transform" };
+  if (index === activeIndex + 1) return { transform: `translateY(${windowHeight - progressVal * windowHeight}px)`, willChange: "transform" };
+  if (index < activeIndex)       return { transform: `translateY(${-windowHeight}px)` };
+  return { transform: `translateY(${windowHeight}px)` };
+};
 
-  // ── LOADER
-  if (!assetsLoaded) {
-    return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center z-[9999]"
-        style={{ background: "linear-gradient(160deg,#fff8f0,#fdecd8,#f9dfc8)" }}>
-        <p className="text-[#b68d33] font-bold text-2xl mb-8 tracking-[4px] uppercase">Wedding Loading</p>
-        <div className="w-64 h-1.5 bg-[#f8e4d0] rounded-full overflow-hidden">
-          <div className="h-full rounded-full" style={{
-            width: `${progress}%`,
-            background: "linear-gradient(90deg,#b68d33,#e8b56d)",
-            transition: "width 0.3s ease-out",
-          }} />
-        </div>
-        <p className="mt-3 text-[#b68d33] font-medium text-lg">{progress}%</p>
-        <p className="absolute bottom-10 text-[#c4a06a] text-xs tracking-widest uppercase">Please Wait…</p>
+// ── LOADER
+if (!assetsLoaded) {
+  return (
+    <div className="fixed inset-0 flex flex-col items-center justify-center z-[9999]"
+      style={{ background: "linear-gradient(160deg,#fff8f0,#fdecd8,#f9dfc8)" }}>
+      <p className="text-[#b68d33] font-bold text-2xl mb-8 tracking-[4px] uppercase">Wedding Loading</p>
+      <div className="w-64 h-1.5 bg-[#f8e4d0] rounded-full overflow-hidden">
+        <div className="h-full rounded-full" style={{
+          width: `${progress}%`,
+          background: "linear-gradient(90deg,#b68d33,#e8b56d)",
+          transition: "width 0.3s ease-out",
+        }} />
       </div>
-    );
-  }
+      <p className="mt-3 text-[#b68d33] font-medium text-lg">{progress}%</p>
+      <p className="absolute bottom-10 text-[#c4a06a] text-xs tracking-widest uppercase">Please Wait…</p>
+    </div>
+  );
+}
 
-  // ── Derived scroll values
-  const firstSectionScroll = Math.min(scrollY, windowHeight);
-  const topProgress  = Math.max(0, Math.min((scrollY - windowHeight) / (windowHeight * 0.9), 1));
-  const topTransform = -(topProgress * topProgress) * 200;
-  const sec3BotEnd   = (section3Ref.current?.offsetTop || windowHeight * 2.2) + windowHeight * 0.4;
-  const botProgress  = Math.max(0, Math.min((scrollY - windowHeight) / (sec3BotEnd - windowHeight), 1));
-  const botTransform = -(botProgress * botProgress) * 120;
+// ── Derived scroll values
+const firstSectionScroll = Math.min(scrollY, windowHeight);
+const topProgress  = Math.max(0, Math.min((scrollY - windowHeight) / (windowHeight * 0.9), 1));
+const topTransform = -(topProgress * topProgress) * 200;
+const sec3BotEnd   = section3Top + windowHeight * 0.4;
+const botProgress  = Math.max(0, Math.min((scrollY - windowHeight) / (sec3BotEnd - windowHeight), 1));
+const botTransform = -(botProgress * botProgress) * 120;
 
-  // ── Car animation
-  const venueTop = venueRef.current?.offsetTop || 0;
-  let carX = 110;
-  if (scrollY >= venueTop) {
-    carX = 10 - (Math.min((scrollY - venueTop) / (windowHeight * 0.6), 1) ** 2) * 130;
-  } else if (scrollY >= venueTop - windowHeight) {
-    const p = Math.min((scrollY - (venueTop - windowHeight)) / (windowHeight * 0.5), 1);
-    carX = 110 - (1 - (1 - p) ** 3) * 100;
-  }
-
+// ── Car animation
+const venueTop = venueTopVal;
+let carX = 110;
+if (scrollY >= venueTop) {
+  carX = 10 - (Math.min((scrollY - venueTop) / (windowHeight * 0.6), 1) ** 2) * 130;
+} else if (scrollY >= venueTop - windowHeight) {
+  const p = Math.min((scrollY - (venueTop - windowHeight)) / (windowHeight * 0.5), 1);
+  carX = 110 - (1 - (1 - p) ** 3) * 100;
+}
   // ── Scroll down indicator
   const isLastSection  = scrollY > windowHeight * 7 - windowHeight * 1.2;
   const showScrollDown = envelopeAnimDone && !isLastSection;
