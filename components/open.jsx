@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/refs, react-hooks/purity, react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/refs, react-hooks/purity, react-hooks/set-state-in-effect */
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import AOS from "aos";
@@ -317,21 +317,21 @@ function Open() {
   const [progress, setProgress]                 = useState(0);
   const [scrollY, setScrollY]                   = useState(0);
   const [windowHeight, setWindowHeight]         = useState(0);
-const [section3Top, setSection3Top] = useState(0);
-const [venueTopVal, setVenueTopVal] = useState(0);
-useEffect(() => {
-  const update = () => {
-    if (section3Ref.current) setSection3Top(section3Ref.current.offsetTop);
-    if (venueRef.current) setVenueTopVal(venueRef.current.offsetTop);
-  };
-  update();
-  window.addEventListener('resize', update);
-  window.addEventListener('scroll', update, { passive: true });
-  return () => {
-    window.removeEventListener('resize', update);
-    window.removeEventListener('scroll', update);
-  };
-}, []);
+  const [section3Top, setSection3Top] = useState(0);
+  const [venueTopVal, setVenueTopVal] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      if (section3Ref.current) setSection3Top(section3Ref.current.offsetTop);
+      if (venueRef.current) setVenueTopVal(venueRef.current.offsetTop);
+    };
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, { passive: true });
+    return () => {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update);
+    };
+  }, []);
   // ── Countdown
   const targetDate = new Date("2026-06-25T00:00:00").getTime();
   const getTimeRemaining = useCallback(() => {
@@ -463,15 +463,14 @@ useEffect(() => {
   });
 
   // ── Section 3 scroll
- // ── Section 3 scroll
-const section3Start    = section3Top;
-const section3Progress = Math.max(0, Math.min((scrollY - section3Start) / windowHeight, 1));
-const getSection3Style = (index) => {
-  if (scrollY < section3Start) return { transform: "translateY(0px)" };
-  if (index === 0) return { transform: `translateY(${-section3Progress * windowHeight}px)`, willChange: "transform" };
-  if (index === 1) return { transform: `translateY(${windowHeight - section3Progress * windowHeight}px)`, willChange: "transform" };
-  return { transform: "translateY(0px)" };
-};
+  const section3Start    = section3Top;
+  const section3Progress = Math.max(0, Math.min((scrollY - section3Start) / windowHeight, 1));
+  const getSection3Style = (index) => {
+    if (scrollY < section3Start) return { transform: "translateY(0px)" };
+    if (index === 0) return { transform: `translateY(${-section3Progress * windowHeight}px)`, willChange: "transform" };
+    if (index === 1) return { transform: `translateY(${windowHeight - section3Progress * windowHeight}px)`, willChange: "transform" };
+    return { transform: "translateY(0px)" };
+  };
 
 // ── Section 4 scroll
 const scrollClamped = Math.max(0, Math.min(scrollY - windowHeight * 3, windowHeight * 4));

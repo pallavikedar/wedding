@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/purity, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/purity */
 "use client";
 /**
  * Section3Slide.jsx
@@ -184,7 +184,7 @@ function ScratchCard({ weddingDate = "05/05/26", onFullReveal }) {
     };
   };
 
-  const doScratch = (e) => {
+  const doScratch = useCallback((e) => {
     if (!isDrawing || revealed) return;
     e.preventDefault();
     const canvas = canvasRef.current;
@@ -213,7 +213,7 @@ function ScratchCard({ weddingDate = "05/05/26", onFullReveal }) {
     ctx.globalCompositeOperation = "source-over";
     setHintVisible(false);
     checkReveal(ctx, canvas);
-  };
+  }, [isDrawing, revealed, getPos, checkReveal]);
 
   const checkReveal = (ctx, canvas) => {
     if (hasTriggered.current) return;
