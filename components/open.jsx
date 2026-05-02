@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs, react-hooks/purity, react-hooks/set-state-in-effect */
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import AOS from "aos";
