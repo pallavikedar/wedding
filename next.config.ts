@@ -1,11 +1,10 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  images: {
-    unoptimized: true,
+  experimental: {
+    reactCompiler: false,
   },
-}
-
-export default nextConfig
+};
+export default nextConfig;
